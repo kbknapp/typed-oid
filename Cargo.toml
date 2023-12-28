@@ -1,0 +1,29 @@
+[package]
+name = "typed-oid"
+version = "0.1.0"
+authors = ["Kevin K. <kevin@24dev.io>"]
+description = "Typed Object IDs"
+documentation = "https://docs.rs/typed-oid"
+readme = "README.md"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/kbknapp/typed-oid"
+edition = "2021"
+rust-version = "1.60.0" # MSRV
+
+[dependencies]
+data-encoding = "2.5.0"
+data-encoding-macro = "0.1.14"
+serde = { version = "1.0.193", optional = true }
+smallvec = { version = "1.11.2", features = ["union"] }
+thiserror = "1.0.52"
+uuid = { version = "1.6.1" }
+
+[dev-dependencies]
+anyhow = "1.0.79"
+wildmatch = "2.3.0"
+
+[features]
+default = ["std", "uuid_v4"]
+std = []
+uuid_v4 = ["uuid/v4"]
+uuid_v7 = ["uuid/v7"]
