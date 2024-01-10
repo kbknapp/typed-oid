@@ -1,0 +1,28 @@
+---
+on: pull_request
+name: PR Lints
+jobs:
+  lints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check spelling of file.txt
+        uses: crate-ci/typos@master
+        with:
+          config: ./typos.toml
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: nightly
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Clippy
+        run: cargo clippy --all-features --all-targets
+
+      - name: Format Check
+        run: cargo fmt --check
+

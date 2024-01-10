@@ -1,0 +1,30 @@
+---
+on: [push, pull_request]
+
+name: Continuous Integration
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - nightly
+          - 1.60.0 # MSRV
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo test --no-run --all-features
+
+      - name: Test
+        run: cargo test --all-features
