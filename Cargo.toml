@@ -1,6 +1,6 @@
 [package]
 name = "typed-oid"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Kevin K. <kevin@24dev.io>"]
 description = "Typed Object IDs"
 documentation = "https://docs.rs/typed-oid"
