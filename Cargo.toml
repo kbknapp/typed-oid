@@ -27,3 +27,8 @@ default = ["std", "uuid_v4"]
 std = []
 uuid_v4 = ["uuid/v4"]
 uuid_v7 = ["uuid/v7"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+rustc-args = ["--cfg", "docsrs"]

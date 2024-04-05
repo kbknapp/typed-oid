@@ -40,15 +40,18 @@ pub struct Oid<P> {
 impl<P: OidPrefix> Oid<P> {
     /// Create a new `Oid` with a UUIDv4 (random)
     #[cfg(feature = "uuid_v4")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v4")))]
     pub fn new_v4() -> Self { Self::with_uuid(Uuid::new_v4()) }
 
     /// Create a new `Oid` with a UUIDv7 (UNIX Epoch based for current system
     /// clock)
     #[cfg(feature = "uuid_v7")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v7")))]
     pub fn new_v7_now() -> Self { Self::with_uuid(Uuid::new_v7(Timestamp::now(NoContext))) }
 
     /// Create a new `Oid` with a UUIDv7 (UNIX Epoch based)
     #[cfg(feature = "uuid_v7")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v7")))]
     pub fn new_v7(ts: Timestamp) -> Self { Self::with_uuid(Uuid::new_v7(ts)) }
 
     /// Create a new Oid with a given UUID
@@ -112,6 +115,7 @@ impl<P: OidPrefix> FromStr for Oid<P> {
 }
 
 #[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 impl<P: OidPrefix> ::serde::Serialize for Oid<P> {
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -122,6 +126,7 @@ impl<P: OidPrefix> ::serde::Serialize for Oid<P> {
 }
 
 #[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 impl<'de, P: OidPrefix> ::serde::Deserialize<'de> for Oid<P> {
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where

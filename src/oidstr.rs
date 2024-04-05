@@ -25,6 +25,7 @@ impl OidStr {
     /// arbitrary and could be lifted in the future by exposing an API to
     /// tune the [`Prefix`] length)
     #[cfg(feature = "uuid_v4")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v4")))]
     pub fn new_v4<P>(prefix: P) -> Result<Self>
     where
         P: TryInto<Prefix, Error = Error>,
@@ -35,6 +36,7 @@ impl OidStr {
     /// Create a new OID with a given [`Prefix`] and generating a new UUIDv7
     /// (UNIX Epoch based on current system clock)
     #[cfg(feature = "uuid_v7")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v7")))]
     pub fn new_v7_now<P>(prefix: P) -> Result<Self>
     where
         P: TryInto<Prefix, Error = Error>,
@@ -45,6 +47,7 @@ impl OidStr {
     /// Create a new OID with a given [`Prefix`] and generating a new UUIDv7
     /// (UNIX Epoch based)
     #[cfg(feature = "uuid_v7")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v7")))]
     pub fn new_v7<P>(prefix: P, ts: Timestamp) -> Result<Self>
     where
         P: TryInto<Prefix, Error = Error>,
@@ -105,6 +108,7 @@ impl fmt::Display for OidStr {
 }
 
 #[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 impl ::serde::Serialize for OidStr {
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -115,6 +119,7 @@ impl ::serde::Serialize for OidStr {
 }
 
 #[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 impl<'de> ::serde::Deserialize<'de> for OidStr {
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
