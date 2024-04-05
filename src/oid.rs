@@ -33,8 +33,9 @@ use crate::{error::Error, prefix::Prefix, uuid::uuid_from_str, OidPrefix};
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Oid<P> {
     uuid: Uuid,
-    // *mut for variance
-    _prefix: PhantomData<*mut P>,
+    // Using fn for variance (invariant with respect to P) whereas using *mut would also be
+    // invariant with respect for P, but would then now allow the Auto-traits Send+Sync.
+    _prefix: PhantomData<fn(P) -> P>,
 }
 
 impl<P: OidPrefix> Oid<P> {
