@@ -184,4 +184,37 @@ mod oid_tests {
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::InvalidPrefix { valid_until: 0 });
     }
+
+    #[test]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
+    fn long_typed_oid() {
+        #[derive(Debug)]
+        struct TestingTesting;
+        impl OidPrefix for TestingTesting {}
+
+        #[cfg_attr(all(feature = "uuid_v4", feature = "uuid_v7"), allow(unused_variables))]
+        #[cfg(feature = "uuid_v4")]
+        let oid: Oid<TestingTesting> = Oid::new_v4();
+        #[cfg(feature = "uuid_v7")]
+        let oid: Oid<TestingTesting> = Oid::new_v7_now();
+        assert!(
+            WildMatch::new("TestingTesting-??????????????????????????").matches(&oid.to_string()),
+            "{oid}"
+        );
+
+        let res = "TestingTesting-0OUS781P4LU7V000PA2A2BN1GC".parse::<Oid<TestingTesting>>();
+        assert!(res.is_ok());
+        let oid: Oid<TestingTesting> = res.unwrap();
+        assert_eq!(
+            oid.uuid(),
+            &"063dc3a0-3925-7c7f-8000-ca84a12ee183"
+                .parse::<Uuid>()
+                .unwrap()
+        );
+
+        let res = "Frm-0OUS781P4LU7V000PA2A2BN1GC".parse::<Oid<TestingTesting>>();
+        assert!(res.is_err());
+        assert_eq!(res.unwrap_err(), Error::InvalidPrefix { valid_until: 0 });
+    }
+}
 }

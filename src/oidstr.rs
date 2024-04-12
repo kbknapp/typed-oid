@@ -167,6 +167,18 @@ mod oid_tests {
     }
 
     #[test]
+    fn str_to_oid_long() {
+        let res = "TestingTesting-0OQPKOAADLRUJ000J7U2UGNS2G".parse::<OidStr>();
+        assert_eq!(
+            res.unwrap(),
+            OidStr {
+                prefix: "TestingTesting".parse().unwrap(),
+                uuid: "06359a61-4a6d-77e9-8000-99fc2f42fc14".parse().unwrap(),
+            }
+        );
+    }
+
+    #[test]
     fn str_to_oid_err_prefix() {
         let res = "-0OQPKOAADLRUJ000J7U2UGNS2G".parse::<OidStr>();
         assert!(res.is_err());
