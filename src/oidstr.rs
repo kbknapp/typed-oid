@@ -29,7 +29,10 @@ impl OidStr {
     where
         P: TryInto<Prefix, Error = Error>,
     {
-        Self::with_uuid(prefix, Uuid::new_v4())
+        Ok(Self {
+            prefix: prefix.try_into()?,
+            uuid: Uuid::new_v4(),
+        })
     }
 
     /// Create a new OID with a given [`Prefix`] and generating a new UUIDv7
@@ -40,7 +43,10 @@ impl OidStr {
     where
         P: TryInto<Prefix, Error = Error>,
     {
-        Self::with_uuid(prefix, Uuid::new_v7(Timestamp::now(NoContext)))
+        Ok(Self {
+            prefix: prefix.try_into()?,
+            uuid: Uuid::new_v7(Timestamp::now(NoContext)),
+        })
     }
 
     /// Create a new OID with a given [`Prefix`] and generating a new UUIDv7
@@ -66,6 +72,18 @@ impl OidStr {
             prefix: prefix.try_into()?,
             uuid,
         })
+    }
+
+    /// Create a new OID with a given [`Prefix`] and a given string-ish UUID.
+    ///
+    /// > **NOTE:** The Prefix must be ASCII characters of `A-Z,a-z,0-9` (this
+    /// > restriction is arbitrary and could be lifted in the future.
+    pub fn try_with_uuid<P, S>(prefix: P, uuid: S) -> Result<Self>
+    where
+        P: TryInto<Prefix, Error = Error>,
+        S: AsRef<str>,
+    {
+        Self::with_uuid(prefix, uuid.as_ref().try_into()?)
     }
 
     /// Get the [`Prefix`] of the OID

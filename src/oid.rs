@@ -29,9 +29,8 @@ use crate::{
 /// impl OidPrefix for B {}
 ///
 /// // The same UUID for both
-/// let uuid = Uuid::new_v4();
-/// let oid_a: Oid<A> = Oid::with_uuid(uuid.clone());
-/// let oid_b: Oid<B> = Oid::with_uuid(uuid);
+/// let oid_a: Oid<A> = Oid::try_with_uuid("b3cfdafa-3fec-41e2-82bf-ff881131abf1").unwrap();
+/// let oid_b: Oid<B> = Oid::try_with_uuid("b3cfdafa-3fec-41e2-82bf-ff881131abf1").unwrap();
 ///
 /// // This fails to compile because `Oid<A>` is a different type than `Oid<B>` and no
 /// // PartialEq or Eq is implemented between these two types.
@@ -68,6 +67,11 @@ impl<P: OidPrefix> Oid<P> {
             uuid,
             _prefix: PhantomData,
         }
+    }
+
+    /// Attempts to create a new Oid with a given string-ish UUID
+    pub fn try_with_uuid<S: AsRef<str>>(uuid: S) -> Result<Self> {
+        Ok(Self::with_uuid(uuid.as_ref().try_into()?))
     }
 
     /// Get the [`Prefix`] of the TOID

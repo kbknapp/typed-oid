@@ -96,19 +96,14 @@ fn run_oidstr() -> Result<()> {
         let oid = OidStr::new_v7_now("EXA")?;
         println!("OidStr from UUIDv7: {oid}");
     }
+    // OIDs can also be created from the raw parts
+    let oid = OidStr::try_with_uuid("EXA", "b3cfdafa-3fec-41e2-82bf-ff881131abf1")?;
+    println!("OidStr from UUID: {oid}");
 
     // OIDs can be parsed from strings, however the "value" must be a valid
     // base32hex (no pad) encoded UUID
     let oid: OidStr = "EXA-4GKFGPRVND4QT3PDR90PDKF66O".parse()?;
     println!("OidStr from string: {oid}");
-
-    // OIDs can also be created from the raw parts
-    let oid = OidStr::with_uuid(
-        "EXA",
-        "b3cfdafa-3fec-41e2-82bf-ff881131abf1"
-            .parse::<Uuid>()?
-    )?;
-    println!("OidStr from raw parts: {oid}");
 
     // One can retrieve the various parts of the OID if needed
     println!("Components of {oid}:");
@@ -136,17 +131,13 @@ fn run_oid() -> Result<()> {
         let oid: Oid<EXA> = Oid::new_v7_now();
         println!("Oid<EXA> with new UUIDv7: {oid}");
     }
+    // Or by giving a UUID
+    let oid: Oid<EXA> = Oid::try_with_uuid("b3cfdafa-3fec-41e2-82bf-ff881131abf1")?;
+    println!("Oid<EXA> with new UUID: {oid}");
 
     // We can go the other direction and parse a string to a Oid<EXA>
     let oid: Oid<EXA> = "EXA-4GKFGPRVND4QT3PDR90PDKF66O".parse()?;
     println!("Oid<EXA> with from string: {oid}");
-
-    // TOIDs can also be created from the raw parts
-    let oid: Oid<EXA> = Oid::with_uuid(
-        "b3cfdafa-3fec-41e2-82bf-ff881131abf1"
-            .parse::<Uuid>()?
-    );
-    println!("Oid from raw parts: {oid}");
 
     // One can retrieve the various parts of the OID if needed
     println!("Components of {oid}:");
