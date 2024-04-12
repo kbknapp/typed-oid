@@ -145,6 +145,33 @@ impl<'de, P: OidPrefix> ::serde::Deserialize<'de> for Oid<P> {
     }
 }
 
+#[cfg(feature = "surrealdb")]
+#[cfg_attr(docsrs, doc(cfg(feature = "surrealdb")))]
+use surrealdb::sql::Thing;
+
+#[cfg(feature = "surrealdb")]
+#[cfg_attr(docsrs, doc(cfg(feature = "surrealdb")))]
+impl<P: OidPrefix> TryFrom<Thing> for Oid<P> {
+    type Error = crate::Error;
+
+    fn try_from(thing: Thing) -> Result<Self> {
+        if !P::str_partial_eq(&thing.tb) {
+            return Err(Error::InvalidPrefix {
+                valid_until: thing
+                    .tb
+                    .chars()
+                    .zip(P::prefix().chars())
+                    .enumerate()
+                    .find(|(_i, (c1, c2))| c1 != c2)
+                    .map(|(i, _)| i)
+                    .unwrap(),
+            });
+        }
+
+        Ok(Self::with_uuid(thing.id.to_raw().parse::<uuid::Uuid>()?))
+    }
+}
+
 #[cfg(test)]
 mod oid_tests {
     #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
@@ -217,4 +244,28 @@ mod oid_tests {
         assert_eq!(res.unwrap_err(), Error::InvalidPrefix { valid_until: 0 });
     }
 }
+
+#[cfg(test)]
+#[cfg(feature = "surrealdb")]
+mod surreal_thing_oid_tests {
+    use surrealdb::sql::Id;
+
+    use super::*;
+
+    #[test]
+    fn typed_oid() {
+        #[derive(Debug)]
+        struct Tst;
+        impl OidPrefix for Tst {
+            fn str_partial_eq(s: &str) -> bool { "test" == s }
+        }
+
+        let thing = Thing {
+            tb: "test".to_string(),
+            id: Id::String("063dc3a0-3925-7c7f-8000-ca84a12ee183".to_string()),
+        };
+
+        let toid: Result<Oid<Tst>> = thing.try_into();
+        assert!(toid.is_ok());
+    }
 }

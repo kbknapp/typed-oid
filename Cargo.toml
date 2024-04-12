@@ -15,6 +15,7 @@ data-encoding = "2.5.0"
 data-encoding-macro = "0.1.14"
 serde = { version = "1.0.193", optional = true }
 smallvec = { version = "1.11.2", features = ["union"] }
+surrealdb = { version = "1.4", optional = true, default-features = false }
 thiserror = "1.0.52"
 uuid = { version = "1.6.1" }
 
@@ -27,6 +28,7 @@ default = ["std", "uuid_v4"]
 std = []
 uuid_v4 = ["uuid/v4"]
 uuid_v7 = ["uuid/v7"]
+surrealdb = ["dep:surrealdb"]
 
 [package.metadata.docs.rs]
 all-features = true
