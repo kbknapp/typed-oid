@@ -1,0 +1,8 @@
+[clog]
+repository = "https://github.com/kbknapp/typed-oid"
+subtitle = "Typed-OID Release"
+
+[sections]
+Documentation = ["docs", "doc"]
+Tests = ["test", "tests"]
+Meta = ["meta"]
