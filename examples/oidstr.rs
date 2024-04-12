@@ -2,7 +2,7 @@ use typed_oid::error::*;
 
 #[cfg(not(feature = "uuid_v4"))]
 fn oid_v4() -> Result<()> {
-    printl!("Feature uuid_v4 is not enabled");
+    println!("Feature uuid_v4 is not enabled");
     Ok(())
 }
 #[cfg(not(feature = "uuid_v7"))]
