@@ -21,7 +21,6 @@ use crate::{
 ///
 /// ```compile_fail
 /// # use typed_oid::{Oid, OidPrefix};
-/// # use uuid::Uuid;
 /// struct A;
 /// impl OidPrefix for A {}
 ///
