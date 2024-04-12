@@ -85,10 +85,17 @@ fn main() -> Result<()> {
 }
 
 fn run_oidstr() -> Result<()> {
-    // OIDs can be created with a given prefix alone, which generates a new
-    // UUIDv4
-    let oid = OidStr::new_v4("EXA")?;
-    println!("OidStr from UUIDv4: {oid}");
+    // OIDs can be created with a given prefix alone
+    #[cfg(feature = "uuid_v4")]
+    {
+        let oid = OidStr::new_v4("EXA")?;
+        println!("OidStr from UUIDv4: {oid}");
+    }
+    #[cfg(feature = "uuid_v7")]
+    {
+        let oid = OidStr::new_v7_now("EXA")?;
+        println!("OidStr from UUIDv7: {oid}");
+    }
 
     // OIDs can be parsed from strings, however the "value" must be a valid
     // base32hex (no pad) encoded UUID
@@ -119,8 +126,16 @@ fn run_oid() -> Result<()> {
     impl OidPrefix for EXA {}
 
     // We can create a new OID by generating a random UUID
-    let oid: Oid<EXA> = Oid::new_v4();
-    println!("Oid<EXA> with new UUIDv4: {oid}");
+    #[cfg(feature = "uuid_v4")]
+    {
+        let oid: Oid<EXA> = Oid::new_v4();
+        println!("Oid<EXA> with new UUIDv4: {oid}");
+    }
+    #[cfg(feature = "uuid_v7")]
+    {
+        let oid: Oid<EXA> = Oid::new_v7_now();
+        println!("Oid<EXA> with new UUIDv7: {oid}");
+    }
 
     // We can go the other direction and parse a string to a Oid<EXA>
     let oid: Oid<EXA> = "EXA-4GKFGPRVND4QT3PDR90PDKF66O".parse()?;

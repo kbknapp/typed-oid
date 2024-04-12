@@ -1,5 +1,4 @@
-use typed_oid::{error::*, OidStr};
-use uuid::Uuid;
+use typed_oid::error::*;
 
 #[cfg(not(feature = "uuid_v4"))]
 fn oid_v4() -> Result<()> {
@@ -21,6 +20,9 @@ fn main() -> Result<()> {
 
 #[cfg(feature = "uuid_v4")]
 fn oid_v4() -> Result<()> {
+    use typed_oid::OidStr;
+    use uuid::Uuid;
+
     // OIDs can be created with a given prefix alone, which generates a new
     // UUIDv4
     let oid = OidStr::new_v4("EXA")?;
@@ -51,6 +53,9 @@ fn oid_v4() -> Result<()> {
 
 #[cfg(feature = "uuid_v7")]
 fn oid_v7() -> Result<()> {
+    use typed_oid::OidStr;
+    use uuid::Uuid;
+
     // OIDs can be created with a given prefix alone, which generates a new
     // UUIDv7 using the current unix timestamp
     let oid = OidStr::new_v7_now("EXA")?;

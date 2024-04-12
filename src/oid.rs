@@ -5,7 +5,12 @@ use data_encoding::BASE32HEX_NOPAD;
 use uuid::timestamp::{context::NoContext, Timestamp};
 use uuid::Uuid;
 
-use crate::{error::Error, prefix::Prefix, uuid::uuid_from_str, OidPrefix};
+use crate::{
+    error::{Error, Result},
+    prefix::Prefix,
+    uuid::uuid_from_str,
+    OidPrefix,
+};
 
 /// A Typed Object ID where the Prefix is part of the type
 ///
@@ -15,6 +20,7 @@ use crate::{error::Error, prefix::Prefix, uuid::uuid_from_str, OidPrefix};
 /// thus the following fails to compile:
 ///
 /// ```compile_fail
+/// # use typed_oid::{Oid,OidPrefix};
 /// struct A;
 /// impl OidPrefix for A {}
 ///
@@ -141,18 +147,24 @@ impl<'de, P: OidPrefix> ::serde::Deserialize<'de> for Oid<P> {
 
 #[cfg(test)]
 mod oid_tests {
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     use wildmatch::WildMatch;
 
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     use super::*;
 
     #[test]
-    #[cfg(feature = "uuid_v4")]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     fn typed_oid() {
         #[derive(Debug)]
         struct Tst;
         impl OidPrefix for Tst {}
 
+        #[cfg_attr(all(feature = "uuid_v4", feature = "uuid_v7"), allow(unused_variables))]
+        #[cfg(feature = "uuid_v4")]
         let oid: Oid<Tst> = Oid::new_v4();
+        #[cfg(feature = "uuid_v7")]
+        let oid: Oid<Tst> = Oid::new_v7_now();
         assert!(
             WildMatch::new("Tst-??????????????????????????").matches(&oid.to_string()),
             "{oid}"

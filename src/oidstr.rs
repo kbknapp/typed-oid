@@ -133,6 +133,7 @@ impl<'de> ::serde::Deserialize<'de> for OidStr {
 
 #[cfg(test)]
 mod oid_tests {
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     use wildmatch::WildMatch;
 
     use super::*;
@@ -201,6 +202,7 @@ mod oid_tests {
     }
 
     #[test]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     fn oid_to_uuid() {
         let oid: OidStr = "TST-0OQPKOAADLRUJ000J7U2UGNS2G".parse().unwrap();
         assert_eq!(

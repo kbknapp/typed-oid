@@ -1,5 +1,4 @@
-use typed_oid::{error::*, Oid, OidPrefix};
-use uuid::Uuid;
+use typed_oid::{error::*, OidPrefix};
 
 #[cfg(not(feature = "uuid_v4"))]
 fn oid_v4() -> Result<()> {
@@ -26,6 +25,9 @@ fn main() -> Result<()> {
 
 #[cfg(feature = "uuid_v4")]
 fn oid_v4() -> Result<()> {
+    use typed_oid::Oid;
+    use uuid::Uuid;
+
     // We can create a new OID by generating a random UUID
     let oid: Oid<EXA> = Oid::new_v4();
     println!("Oid<EXA> with new UUIDv4: {oid}");
@@ -55,6 +57,9 @@ fn oid_v4() -> Result<()> {
 
 #[cfg(feature = "uuid_v7")]
 fn oid_v7() -> Result<()> {
+    use typed_oid::Oid;
+    use uuid::Uuid;
+
     // We can create a new OID by generating a random UUID
     let oid: Oid<EXA> = Oid::new_v7_now();
     println!("Oid<EXA> with new UUIDv7: {oid}");
