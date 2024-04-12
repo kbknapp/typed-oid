@@ -21,9 +21,8 @@ pub struct OidStr {
 impl OidStr {
     /// Create a new OID with a given [`Prefix`] and generating a new UUID
     ///
-    /// **NOTE:** The Prefix must be ASCII characters (this restriction is
-    /// arbitrary and could be lifted in the future by exposing an API to
-    /// tune the [`Prefix`] length)
+    /// > **NOTE:** The Prefix must be ASCII characters of `A-Z,a-z,0-9` (this
+    /// > restriction is arbitrary and could be lifted in the future.
     #[cfg(feature = "uuid_v4")]
     #[cfg_attr(docsrs, doc(cfg(feature = "uuid_v4")))]
     pub fn new_v4<P>(prefix: P) -> Result<Self>
@@ -55,12 +54,10 @@ impl OidStr {
         Self::with_uuid(prefix, Uuid::new_v7(ts))
     }
 
-    /// Create a new OID with a given [`Prefix`] and a given UUID. If the UUID
-    /// is not a version 7 an error isr returned.
+    /// Create a new OID with a given [`Prefix`] and a given UUID.
     ///
-    /// **NOTE:** The Prefix must be 3 ASCII characters (this restriction is
-    /// arbitrary and could be lifted in the future by exposing an API to
-    /// tune the [`Prefix`] length)
+    /// > **NOTE:** The Prefix must be ASCII characters of `A-Z,a-z,0-9` (this
+    /// > restriction is arbitrary and could be lifted in the future.
     pub fn with_uuid<P>(prefix: P, uuid: Uuid) -> Result<Self>
     where
         P: TryInto<Prefix, Error = Error>,
