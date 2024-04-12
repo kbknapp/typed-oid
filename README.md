@@ -12,6 +12,7 @@ A library for using and handling Typed Object IDs.
 * [The Pitch](#the-pitch)
 * [The Anti-Pitch](#the-anti-pitch)
 * [Example](#example)
+* [Minimum Supported Rust Version (MSRV)](#minimum-supported-rust-version-msrv)
 * [License](#license)
 
 <!-- vim-markdown-toc -->
@@ -154,6 +155,17 @@ fn run_oid() -> Result<()> {
     Ok(())
 }
 ```
+
+## Minimum Supported Rust Version (MSRV)
+
+The MSRV depends on which crate features are enabled:
+
+| Feature | MSRV |
+| :-: | :-: |
+| `uuid_4` | 1.60.0 |
+| `uuid_7` | 1.60.0 |
+| `serde` | 1.60.0 |
+| `surrealdb` | 1.75.0 |
 
 ## License
 
