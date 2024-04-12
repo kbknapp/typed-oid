@@ -24,4 +24,22 @@ pub trait OidPrefix {
     ///
     /// The default representation is to use the type name itself.
     fn prefix() -> &'static str { std::any::type_name::<Self>().split(':').last().unwrap() }
+
+    /// A partial equality check for the prefix. This is useful in cases when
+    /// converting from a string to an Typed-OID where the type and string
+    /// prefix are not the same.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use typed_oid::{Oid, OidPrefix};
+    /// #[derive(Debug)]
+    /// struct A;
+    /// impl OidPrefix for A {
+    ///     fn str_partial_eq(s: &str) -> bool { "apple" == s }
+    /// }
+    ///
+    /// let oid: Oid<A> = "apple-4GKFGPRVND4QT3PDR90PDKF66O".parse().unwrap();
+    /// ```
+    fn str_partial_eq(s: &str) -> bool { Self::prefix() == s }
 }

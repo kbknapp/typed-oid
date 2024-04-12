@@ -99,8 +99,7 @@ impl<P: OidPrefix> FromStr for Oid<P> {
             if pfx.is_empty() {
                 return Err(Error::MissingPrefix);
             }
-
-            if pfx != P::prefix() {
+            if pfx != P::prefix() && !P::str_partial_eq(pfx) {
                 return Err(Error::InvalidPrefix {
                     valid_until: pfx
                         .chars()
