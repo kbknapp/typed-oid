@@ -1,0 +1,4 @@
+[advisories]
+ignore = [
+    "RUSTSEC-2023-0071" # `surrealdb`->...->`rsa` 0.9.6 (however we only use `surrealdb::sql::Thing`)
+]
