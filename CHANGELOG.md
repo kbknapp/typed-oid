@@ -1,3 +1,10 @@
+<a name="0.3.1"></a>
+## 0.3.1 Typed-OID Release (2024-04-13)
+
+#### Features
+
+*   adds convenience methods for creating Oids from base32hex encoded UUID strings ([3ad9a649](https://github.com/kbknapp/typed-oid/commit/3ad9a6491522ef5aad53227ddfa0785719c21016))
+
 <a name="0.3.0"></a>
 ## 0.3.0 Typed-OID Release (2024-04-12)
 
