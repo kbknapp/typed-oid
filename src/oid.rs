@@ -8,7 +8,7 @@ use uuid::Uuid;
 use crate::{
     error::{Error, Result},
     prefix::Prefix,
-    uuid::uuid_from_str,
+    uuid::uuid_from_str_b32h,
     OidPrefix,
 };
 
@@ -73,6 +73,11 @@ impl<P: OidPrefix> Oid<P> {
         Ok(Self::with_uuid(uuid.as_ref().try_into()?))
     }
 
+    /// Attemp to create an Oid from a base32hex encoded UUID string-ish value
+    pub fn try_with_uuid_base32<S: AsRef<str>>(base32_uuid: S) -> Result<Self> {
+        Ok(Self::with_uuid(uuid_from_str_b32h(base32_uuid.as_ref())?))
+    }
+
     /// Get the [`Prefix`] of the TOID
     ///
     /// # Panics
@@ -115,7 +120,7 @@ impl<P: OidPrefix> FromStr for Oid<P> {
             }
 
             return Ok(Self {
-                uuid: uuid_from_str(val)?,
+                uuid: uuid_from_str_b32h(val)?,
                 _prefix: PhantomData,
             });
         }
@@ -213,6 +218,33 @@ mod oid_tests {
         let res = "Frm-0OUS781P4LU7V000PA2A2BN1GC".parse::<Oid<Tst>>();
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::InvalidPrefix { valid_until: 0 });
+    }
+
+    #[test]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
+    fn from_uuid_str() {
+        #[derive(Debug)]
+        struct Tst;
+        impl OidPrefix for Tst {}
+
+        let oid: Oid<Tst> = Oid::try_with_uuid("063dc3a0-3925-7c7f-8000-ca84a12ee183").unwrap();
+        assert!(
+            WildMatch::new("Tst-??????????????????????????").matches(&oid.to_string()),
+            "{oid}"
+        );
+    }
+
+    #[test]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
+    fn from_uuid_str_b32h() {
+        #[derive(Debug)]
+        struct Tst;
+        impl OidPrefix for Tst {}
+
+        let oid: Oid<Tst> = Oid::try_with_uuid_base32("0OUS781P4LU7V000PA2A2BN1GC").unwrap();
+        assert_eq!(
+            "Tst-0OUS781P4LU7V000PA2A2BN1GC", &oid.to_string()
+        );
     }
 
     #[test]

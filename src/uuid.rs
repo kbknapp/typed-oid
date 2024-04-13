@@ -3,7 +3,8 @@ use uuid::Uuid;
 
 use crate::error::{Error, Result};
 
-pub(crate) fn uuid_from_str(s: &str) -> Result<Uuid> {
+/// Converts a Base32hex encoded UUID string into a UUID
+pub(crate) fn uuid_from_str_b32h(s: &str) -> Result<Uuid> {
     if s.is_empty() {
         return Err(Error::MissingValue);
     }

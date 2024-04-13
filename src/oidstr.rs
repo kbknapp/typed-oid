@@ -8,7 +8,7 @@ use uuid::Uuid;
 use crate::{
     error::{Error, Result},
     prefix::Prefix,
-    uuid::uuid_from_str,
+    uuid::uuid_from_str_b32h,
 };
 
 /// An Object ID
@@ -86,6 +86,15 @@ impl OidStr {
         Self::with_uuid(prefix, uuid.as_ref().try_into()?)
     }
 
+    /// Attemp to create an Oid from a base32hex encoded UUID string-ish value
+    pub fn try_with_uuid_base32<P, S>(prefix: P, base32_uuid: S) -> Result<Self>
+    where
+        P: TryInto<Prefix, Error = Error>,
+        S: AsRef<str>,
+    {
+        Self::with_uuid(prefix, uuid_from_str_b32h(base32_uuid.as_ref())?)
+    }
+
     /// Get the [`Prefix`] of the OID
     pub fn prefix(&self) -> &Prefix { &self.prefix }
 
@@ -108,7 +117,7 @@ impl FromStr for OidStr {
 
             return Ok(Self {
                 prefix: pfx.parse()?,
-                uuid: uuid_from_str(val)?,
+                uuid: uuid_from_str_b32h(val)?,
             });
         }
 
@@ -147,8 +156,8 @@ impl<'de> ::serde::Deserialize<'de> for OidStr {
 }
 
 #[cfg(test)]
+#[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
 mod oid_tests {
-    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     use wildmatch::WildMatch;
 
     use super::*;
@@ -229,7 +238,6 @@ mod oid_tests {
     }
 
     #[test]
-    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
     fn oid_to_uuid() {
         let oid: OidStr = "TST-0OQPKOAADLRUJ000J7U2UGNS2G".parse().unwrap();
         assert_eq!(
@@ -238,5 +246,20 @@ mod oid_tests {
                 .parse::<Uuid>()
                 .unwrap()
         );
+    }
+
+    #[test]
+    fn from_uuid_str() {
+        let oid = OidStr::try_with_uuid("Tst", "063dc3a0-3925-7c7f-8000-ca84a12ee183").unwrap();
+        assert!(
+            WildMatch::new("Tst-??????????????????????????").matches(&oid.to_string()),
+            "{oid}"
+        );
+    }
+
+    #[test]
+    fn from_uuid_str_b32h() {
+        let oid = OidStr::try_with_uuid_base32("Tst", "0OUS781P4LU7V000PA2A2BN1GC").unwrap();
+        assert_eq!("Tst-0OUS781P4LU7V000PA2A2BN1GC", &oid.to_string());
     }
 }
