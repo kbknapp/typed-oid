@@ -176,7 +176,8 @@ impl<P: OidPrefix> TryFrom<Thing> for Oid<P> {
             });
         }
 
-        Ok(Self::with_uuid(thing.id.to_raw().parse::<uuid::Uuid>()?))
+        let val = thing.id.to_raw();
+        Self::try_with_uuid(&val).or_else(|_| Self::try_with_uuid_base32(val))
     }
 }
 
@@ -288,7 +289,7 @@ mod surreal_thing_oid_tests {
     use super::*;
 
     #[test]
-    fn typed_oid() {
+    fn uuid() {
         #[derive(Debug)]
         struct Tst;
         impl OidPrefix for Tst {
@@ -298,6 +299,23 @@ mod surreal_thing_oid_tests {
         let thing = Thing {
             tb: "test".to_string(),
             id: Id::String("063dc3a0-3925-7c7f-8000-ca84a12ee183".to_string()),
+        };
+
+        let toid: Result<Oid<Tst>> = thing.try_into();
+        assert!(toid.is_ok());
+    }
+
+    #[test]
+    fn uuid_base32() {
+        #[derive(Debug)]
+        struct Tst;
+        impl OidPrefix for Tst {
+            fn str_partial_eq(s: &str) -> bool { "test" == s }
+        }
+
+        let thing = Thing {
+            tb: "test".to_string(),
+            id: Id::String("0OUS781P4LU7V000PA2A2BN1GC".to_string()),
         };
 
         let toid: Result<Oid<Tst>> = thing.try_into();
