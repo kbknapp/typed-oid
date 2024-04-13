@@ -1,3 +1,10 @@
+<a name="0.3.2"></a>
+## 0.3.2 Typed-OID Release (2024-04-13)
+
+#### Features
+
+*   surrealdb conversions can also be base32hex encoded IDs ([237b6b73](https://github.com/kbknapp/typed-oid/commit/237b6b7368c8c54ad9d786dab5f4f131839f05bb))
+
 <a name="0.3.1"></a>
 ## 0.3.1 Typed-OID Release (2024-04-13)
 
