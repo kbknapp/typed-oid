@@ -1,4 +1,8 @@
-use std::{fmt, str::FromStr};
+use std::{
+    fmt,
+    hash::{Hash, Hasher},
+    str::FromStr,
+};
 
 use data_encoding::BASE32HEX_NOPAD;
 #[cfg(feature = "uuid_v7")]
@@ -128,6 +132,13 @@ impl FromStr for OidStr {
 impl fmt::Display for OidStr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}-{}", self.prefix, self.value())
+    }
+}
+
+impl Hash for OidStr {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.prefix.hash(state);
+        self.uuid.hash(state);
     }
 }
 
@@ -261,5 +272,14 @@ mod oid_tests {
     fn from_uuid_str_b32h() {
         let oid = OidStr::try_with_uuid_base32("Tst", "0OUS781P4LU7V000PA2A2BN1GC").unwrap();
         assert_eq!("Tst-0OUS781P4LU7V000PA2A2BN1GC", &oid.to_string());
+    }
+
+    #[test]
+    fn hash() {
+        use std::collections::HashMap;
+        let oid: OidStr = "TST-0OQPKOAADLRUJ000J7U2UGNS2G".parse().unwrap();
+
+        let mut map = HashMap::new();
+        map.insert(oid, "test");
     }
 }

@@ -1,4 +1,9 @@
-use std::{fmt, marker::PhantomData, str::FromStr};
+use std::{
+    fmt,
+    hash::{Hash, Hasher},
+    marker::PhantomData,
+    str::FromStr,
+};
 
 use data_encoding::BASE32HEX_NOPAD;
 #[cfg(feature = "uuid_v7")]
@@ -129,6 +134,16 @@ impl<P: OidPrefix> FromStr for Oid<P> {
     }
 }
 
+impl<P> Hash for Oid<P>
+where
+    P: OidPrefix,
+{
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        P::prefix().hash(state);
+        self.uuid.hash(state);
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 impl<P: OidPrefix> ::serde::Serialize for Oid<P> {
@@ -243,9 +258,21 @@ mod oid_tests {
         impl OidPrefix for Tst {}
 
         let oid: Oid<Tst> = Oid::try_with_uuid_base32("0OUS781P4LU7V000PA2A2BN1GC").unwrap();
-        assert_eq!(
-            "Tst-0OUS781P4LU7V000PA2A2BN1GC", &oid.to_string()
-        );
+        assert_eq!("Tst-0OUS781P4LU7V000PA2A2BN1GC", &oid.to_string());
+    }
+
+    #[test]
+    #[cfg(any(feature = "uuid_v4", feature = "uuid_v7"))]
+    fn hash() {
+        use std::collections::HashMap;
+        #[derive(Debug, PartialEq, Eq)]
+        struct Tst;
+        impl OidPrefix for Tst {}
+
+        let oid: Oid<Tst> = Oid::try_with_uuid("063dc3a0-3925-7c7f-8000-ca84a12ee183").unwrap();
+
+        let mut map = HashMap::new();
+        map.insert(oid, "test");
     }
 
     #[test]

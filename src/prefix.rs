@@ -1,5 +1,10 @@
+use std::{
+    fmt,
+    hash::{Hash, Hasher},
+    str::FromStr,
+};
+
 use smallvec::SmallVec;
-use std::{fmt, str::FromStr};
 
 use crate::error::{Error, Result};
 
@@ -102,6 +107,10 @@ impl TryFrom<&str> for Prefix {
     type Error = Error;
 
     fn try_from(s: &str) -> std::result::Result<Self, Self::Error> { s.parse() }
+}
+
+impl Hash for Prefix {
+    fn hash<H: Hasher>(&self, state: &mut H) { self.bytes.hash(state); }
 }
 
 #[cfg(test)]
