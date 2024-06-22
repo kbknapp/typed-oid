@@ -1,3 +1,10 @@
+<a name="0.4.0"></a>
+## 0.4.0 Typed-OID Release (2024-06-21)
+
+#### Features
+
+*   `Hash` is implemented for `Oid` and `OidStr` ([be16d32](https://github.com/kbknapp/typed-oid/commit/be16d322bca90d5f27f719dfa815b6a9fe65e93b))
+
 <a name="0.3.2"></a>
 ## 0.3.2 Typed-OID Release (2024-04-13)
 
