@@ -1,3 +1,10 @@
+<a name="0.4.1"></a>
+## 0.4.1 Typed-OID Release (2024-06-24)
+
+#### Fixes
+
+*   `Oid<T>` used `derive(Copy, Clone)` which sometimes does not properly check the bounds (See rust#26925); the traits are now implemented manually ([f9cdb2a](https://github.com/kbknapp/typed-oid/commit/f9cdb2af57bd541fc4156f691159d73b253bf737))
+
 <a name="0.4.0"></a>
 ## 0.4.0 Typed-OID Release (2024-06-21)
 
