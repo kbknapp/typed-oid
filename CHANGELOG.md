@@ -1,3 +1,10 @@
+<a name="0.4.2"></a>
+## 0.4.2 Typed-OID Release (2024-06-24)
+
+#### Fixes
+
+*   Impl `Debug` manually for `Oid<T>` for better display ([8d384ce](https://github.com/kbknapp/typed-oid/commit/8d384ce6e0f6714b6e53928483a693b67aa46b9a))
+
 <a name="0.4.1"></a>
 ## 0.4.1 Typed-OID Release (2024-06-24)
 
