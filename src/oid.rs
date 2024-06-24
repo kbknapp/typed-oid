@@ -40,12 +40,20 @@ use crate::{
 /// // PartialEq or Eq is implemented between these two types.
 /// oid_a == oid_b
 /// ```
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Oid<P> {
     uuid: Uuid,
     // Using fn for variance (invariant with respect to P) whereas using *mut would also be
     // invariant with respect for P, but would then now allow the Auto-traits Send+Sync.
     _prefix: PhantomData<fn(P) -> P>,
+}
+
+// Must manaully implement Copy and Clone because of the PhantomData see:
+// https://github.com/rust-lang/rust/issues/26925
+impl<P> Copy for Oid<P> {}
+
+impl<P> Clone for Oid<P> {
+    fn clone(&self) -> Self { *self }
 }
 
 impl<P: OidPrefix> Oid<P> {
