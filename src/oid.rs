@@ -40,12 +40,20 @@ use crate::{
 /// // PartialEq or Eq is implemented between these two types.
 /// oid_a == oid_b
 /// ```
-#[derive(Debug, PartialEq, Eq)]
+#[derive(PartialEq, Eq)]
 pub struct Oid<P> {
     uuid: Uuid,
     // Using fn for variance (invariant with respect to P) whereas using *mut would also be
     // invariant with respect for P, but would then now allow the Auto-traits Send+Sync.
     _prefix: PhantomData<fn(P) -> P>,
+}
+
+impl<P> fmt::Debug for Oid<P> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct(&format!("Oid<{}>", std::any::type_name::<P>()))
+            .field("uuid", &self.uuid)
+            .finish()
+    }
 }
 
 // Must manaully implement Copy and Clone because of the PhantomData see:
